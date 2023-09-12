@@ -13,7 +13,7 @@ public class dataBase {
                 count++;
                 System.out.println("Superhelt tilføjet til listen.");
             } else {
-                System.out.println("Listen er fuld. Der er ikke plads til flere superhelt.");
+                System.out.println("Listen er fuld. Der er ikke plads til flere superhelte.");
             }
         }
 
