@@ -1,42 +1,45 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Database database = new Database();
+        Controller controller = new Controller(database);
+        boolean fortsæt = true;
 
-        // ny database med plads til 5 superhelte
-        dataBase database = new dataBase(5);
-
-        while (true) {
+        while (fortsæt) {
 
             System.out.print("VELKOMMEN TIL SUPERHELTE UNIVERSET <3");
             System.out.println("\nMENU: ");
             System.out.println("1. Opret superhelte");
-            System.out.println("2. Forlad programmet");
+            System.out.println("2. Vis allerede eksisterende superhelte");
+            System.out.println("3. Forlad programmet");
 
-            System.out.println("Vælg 1 eller 2: ");
-            int opretEllerForlad = scanner.nextInt();
+            System.out.println("Vælg en af valgmulighederne: ");
+            int menuValg = scanner.nextInt();
+
             scanner.nextLine();
 
-            switch (opretEllerForlad) {
+            switch (menuValg) {
                 case 1:
                     while (true) {
                         System.out.print("\nIndtast superheltnavn: ");
-                        String superheroName = scanner.nextLine();
+                        String navn = scanner.nextLine();
 
                         System.out.print("Er superhelten et menneske? (ja/nej): ");
-                        boolean isHuman = scanner.nextLine().equalsIgnoreCase("ja");
+                        boolean erMenneske = scanner.nextLine().equalsIgnoreCase("ja");
 
                         System.out.print("Hvilken superkraft har superhelten: ");
-                        String superpower = scanner.nextLine();
+                        String superkraft = scanner.nextLine();
                         // Løkke for at teste om input er firecifret
-                        int creationYear = 0;
+                        int oprettelsesår = 0;
 
                         while (true) {
                             System.out.print("Indtast oprettelsesår (fire cifre): ");
                             String input = scanner.nextLine();
 
                             if (input.length() == 4 && input.matches("\\d+")) {
-                                creationYear = Integer.parseInt(input);
+                                oprettelsesår = Integer.parseInt(input);
                                 break;
                             } else {
                                 System.out.print("Ugyldigt input. ");
@@ -44,12 +47,10 @@ public class Main {
                         }
 
                         System.out.print("Hvilken styrke har din superhelt: ");
-                        String strength = scanner.nextLine();
+                        String styrke = scanner.nextLine();
 
-                        // Superhelt objekt med attributterne
-                        superHelt superhelt = new superHelt(superheroName, isHuman, superpower, creationYear, strength);
+                        Superhelt superhelt = new Superhelt(navn, erMenneske, superkraft, oprettelsesår, styrke);
 
-                        // superhelten tilføjes til databasen
                         database.addSuperhelt(superhelt);
 
                         System.out.println("Vil du lave en ny superhelt? (ja/nej): ");
@@ -60,12 +61,19 @@ public class Main {
                     }
                     break;
                 case 2:
+                    ArrayList<Superhelt> alleSuperhelte = controller.hentAlleSuperhelte();
+                    for (Superhelt superhelt: alleSuperhelte){
+                        System.out.println(superhelt);
+                    }
+                    fortsæt = false;
+                    break;
+                case 3:
                     System.out.println("Forlader superheltene");
+                    fortsæt = false;
                     scanner.close();
-                    System.exit(0);
 
                 default:
-                    System.out.println("Du havde to valgmuligheder. Ikke et helt univers. Vælg igen.");
+                    System.out.println("Du havde tre valgmuligheder. Ikke et helt univers. Vælg igen.");
             }
         }
     }
