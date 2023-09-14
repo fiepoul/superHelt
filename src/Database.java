@@ -14,5 +14,18 @@ public class Database {
     public ArrayList<Superhelt> getAllSuperhelte() {
         return superhelte;
     }
+
+    public ArrayList<Superhelt> søgSuperhelte(String søgeord) {
+        ArrayList<Superhelt> matchendeSuperhelte = new ArrayList<>();
+
+        for (Superhelt superhelt : superhelte) {
+            if (superhelt.getNavn().toLowerCase().contains(søgeord.toLowerCase())) {
+                matchendeSuperhelte.add(superhelt);
+            }
+        }
+
+        return matchendeSuperhelte;
+    }
+
     }
 

@@ -20,23 +20,23 @@ public class Superhelt {
                     ", Oprettelsesår: " + oprettelsesår +
                     ", Styrke: " + styrke;
         }
-        public String getSuperheroName() {
+        public String getNavn() {
             return navn;
         }
 
-        public boolean getIsHuman() {
+        public boolean getErMenneske() {
             return erMenneske;
         }
 
-        public String getSuperpower() {
+        public String getSuperkraft() {
             return superkraft;
         }
 
-        public int getCreationYear(){
+        public int getOprettelsesår(){
             return oprettelsesår;
         }
 
-        public String getStrength() {
+        public String getStyrke() {
             return styrke;
         }
     }

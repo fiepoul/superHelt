@@ -12,8 +12,9 @@ public class Main {
             System.out.print("VELKOMMEN TIL SUPERHELTE UNIVERSET <3");
             System.out.println("\nMENU: ");
             System.out.println("1. Opret superhelte");
-            System.out.println("2. Vis allerede eksisterende superhelte");
-            System.out.println("3. Forlad programmet");
+            System.out.println("2. Vis alle superhelte");
+            System.out.println("3. Søg en superhelt");
+            System.out.println("4. Forlad programmet");
 
             System.out.println("Vælg en af valgmulighederne: ");
             int menuValg = scanner.nextInt();
@@ -68,12 +69,30 @@ public class Main {
                     fortsæt = false;
                     break;
                 case 3:
+                    System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
+
+                    String søgeord = scanner.nextLine();
+                    ArrayList<Superhelt> matchendeSuperhelte = database.søgSuperhelte(søgeord);
+
+
+                    if (matchendeSuperhelte.isEmpty()) {
+                        System.out.println("Ingen matchende superhelte blev fundet.");
+                    } else {
+                        System.out.println("Matchende superhelte:");
+                        for (int i = 0; i < matchendeSuperhelte.size(); i++) {
+                            System.out.println((i + 1) + ". " + matchendeSuperhelte.get(i).getNavn());
+                        }
+                    }
+                    fortsæt = false;
+                    break;
+
+                case 4:
                     System.out.println("Forlader superheltene");
                     fortsæt = false;
                     scanner.close();
 
                 default:
-                    System.out.println("Du havde tre valgmuligheder. Ikke et helt univers. Vælg igen.");
+                    System.out.println("Du havde fire valgmuligheder. Ikke et helt univers. Vælg igen.");
             }
         }
     }
