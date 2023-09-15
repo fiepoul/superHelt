@@ -39,5 +39,25 @@ public class Superhelt {
         public String getStyrke() {
             return styrke;
         }
+
+    public void setNavn(String nytNavn) {
+            this.navn = nytNavn;
+    }
+    public void setSuperkraft(String nySuperkraft) {
+        this.superkraft = nySuperkraft;
+    }
+
+    public void setErMenneske(boolean nyErMenneske) {
+            this.erMenneske = nyErMenneske;
+    }
+
+    public void setOprettelsesår(int nytOprettelsesår) {
+            this.oprettelsesår = nytOprettelsesår;
+    }
+
+    public void setStyrke(String nyStyrke) {
+            this.styrke = nyStyrke;
+    }
+
     }
 

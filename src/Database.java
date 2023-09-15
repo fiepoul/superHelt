@@ -4,7 +4,7 @@ public class Database {
         private ArrayList<Superhelt> superhelte;
 
     public Database() {
-        superhelte = new ArrayList<>();
+        this.superhelte = new ArrayList<>();
     }
 
     public void addSuperhelt(Superhelt superhelt) {
@@ -26,6 +26,22 @@ public class Database {
 
         return matchendeSuperhelte;
     }
+    public void editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, String nyStyrke) {
+        for (Superhelt superhelt : superhelte) {
+            if (superhelt.getNavn().equalsIgnoreCase(nytNavn)) {
+                // Find superhelten med det matchende navn og rediger oplysningerne
+                superhelt.setNavn(nytNavn);
+                superhelt.setSuperkraft(nySuperkraft);
+                superhelt.setErMenneske(nyErMenneske);
+                superhelt.setOprettelsesår(nytOprettelsesår);
+                superhelt.setStyrke(nyStyrke);
+                // Du kan tilføje flere redigeringsoperationer efter behov
 
+                System.out.println("Superhelten er blevet redigeret.");
+                return; // Afslut metoden, da redigeringen er gennemført
+            }
+        }
+        System.out.println("Ingen superhelt med det angivne navn blev fundet.");
+    }
     }
 
