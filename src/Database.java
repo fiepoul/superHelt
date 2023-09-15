@@ -43,5 +43,15 @@ public class Database {
         }
         System.out.println("Ingen superhelt med det angivne navn blev fundet.");
     }
+
+    public boolean harSuperhelt(String navn) {
+        for (Superhelt superhelt : superhelte) {
+            if (superhelt.getNavn().equalsIgnoreCase(navn)) {
+                return true; // Superhelten blev fundet i databasen
+            }
+        }
+        return false; // Superhelten blev ikke fundet i databasen
+    }
+
     }
 

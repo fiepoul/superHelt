@@ -10,4 +10,14 @@ public class Controller {
     public ArrayList<Superhelt> hentAlleSuperhelte() {
         return database.getAllSuperhelte();
     }
+
+    public boolean validerJaNejInput(String input) {
+        return input.equalsIgnoreCase("ja") || input.equalsIgnoreCase("nej");
+    }
+
+    public boolean eksistererSuperhelt(String navn) {
+        // Brug af Database-klassen til at kontrollere, om superhelten findes
+        return database.harSuperhelt(navn);
+    }
+
 }
