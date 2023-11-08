@@ -1,4 +1,5 @@
-public class Superhelt implements Comparable<Superhelt> {
+import java.io.Serializable;
+public class Superhelt implements Serializable, Comparable<Superhelt> {
         private String navn;
         private boolean erMenneske;
         private String superkraft;

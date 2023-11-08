@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import java.util.InputMismatchException;
+import java.util.*;
 
 public class UserInterface {
     private Scanner scanner;
@@ -17,6 +14,7 @@ public class UserInterface {
 
     public void start() {
         boolean fortsæt = true;
+        controller.initDatabase();
 
         while (fortsæt) {
             try {
@@ -41,8 +39,7 @@ public class UserInterface {
                         redigerSuperhelt();
                         break;
                     case 6:
-                        System.out.println("Gemmer superhelte og afslutter programmet.");
-                        saveSuperheroes();
+                        saveAndExit();
                         fortsæt = false;
                         scanner.close();
                         break;
@@ -111,21 +108,30 @@ public class UserInterface {
         }
 
     public void visSorteretListe() {
-        ArrayList<Superhelt> alleSuperhelte = controller.hentAlleSuperhelte();
+        System.out.println("Hvilken attribut vil du sortere efter? (navn/oprettelsesår/styrke)");
+        String attribut = scanner.nextLine();
 
-        if (alleSuperhelte != null && !alleSuperhelte.isEmpty()) {
-            // Kopier listen for at undgå at ændre den oprindelige rækkefølge
-            ArrayList<Superhelt> sorteretListe = new ArrayList<>(alleSuperhelte);
+        Comparator<Superhelt> comparator;
+        switch (attribut.toLowerCase()) {
+            case "navn":
+                comparator = new SuperHeltComparator();
+                break;
+            case "oprettelsesår":
+                comparator = Comparator.comparing(Superhelt::getOprettelsesår);
+                break;
+            case "styrke":
+                comparator = Comparator.comparing(Superhelt::getStyrke);
+                break;
+            default:
+                System.out.println("Ukendt attribut. Sorterer efter navn som standard.");
+                comparator = new SuperHeltComparator();
+        }
 
-            // Sorter listen alfabetisk baseret på superheltenes navne
-            Collections.sort(sorteretListe);
+        ArrayList<Superhelt> sorteretListe = new ArrayList<>(controller.hentAlleSuperhelte());
+        sorteretListe.sort(comparator);
 
-            System.out.println("Alfabetisk sorteret liste af superheltenavne:\n");
-            for (Superhelt superhelt : sorteretListe) {
-                System.out.println(superhelt.toString());
-            }
-        } else {
-            System.out.println("Ingen superhelte fundet i databasen.");
+        for (Superhelt superhelt : sorteretListe) {
+            System.out.println(superhelt.toString());
         }
     }
 
@@ -191,13 +197,10 @@ public class UserInterface {
         return number;
     }
 
-    public void saveSuperheroes() {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("superheroes.txt"))) {
-            outputStream.writeObject(controller.hentAlleSuperhelte());
-            System.out.println("Superhelte er gemt til filen 'superheroes.txt'.");
-        } catch (IOException e) {
-            System.out.println("Fejl ved gemning af superhelte til filen.");
-        }
+    public void saveAndExit() {
+        controller.saveSuperheroesIfNeeded();
+        System.out.println("Programmet afsluttes og superhelte gemmes.");
+        System.exit(0);
     }
 
     }

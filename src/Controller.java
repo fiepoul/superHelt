@@ -31,4 +31,14 @@ public class Controller {
         }
     }
 
+    public void saveSuperheroesIfNeeded() {
+        if (database.getIsDirty()) {
+            database.saveSuperheroes();
+        }
+    }
+
+    public void initDatabase() {
+        database.loadSuperheroes();
+    }
+
 }

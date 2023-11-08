@@ -1,14 +1,14 @@
+import java.io.*;
 import java.util.ArrayList;
 
 public class Database {
+        private boolean isDirty = false;
         private ArrayList<Superhelt> superhelte;
+        private final String FILENAME = "superheroes.ser";
 
     public Database() {
-        this.superhelte = new ArrayList<>();
-    }
-
-    public void addSuperhelt(Superhelt superhelt) {
-        superhelte.add(superhelt);
+        superhelte = new ArrayList<>();
+        loadSuperheroes();
     }
 
     public ArrayList<Superhelt> getAllSuperhelte() {
@@ -48,12 +48,40 @@ public class Database {
     public boolean harSuperhelt(String navn) {
         for (Superhelt superhelt : superhelte) {
             if (superhelt.getNavn().equalsIgnoreCase(navn)) {
-                return true; // Superhelten blev fundet i databasen
+                return true;
             }
         }
-        return false; // Superhelten blev ikke fundet i databasen
+        return false;
+    }
 
+    // tilføjer og tjekker efter Dirty flag
+    public void addSuperhelt(Superhelt superhelt) {
+        superhelte.add(superhelt);
+        isDirty = true;
+    }
 
+    // En metode til at indlæse data
+    public void loadSuperheroes() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILENAME))) {
+            superhelte = (ArrayList<Superhelt>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Kunne ikke indlæse superhelte fra filen: " + e.getMessage());
+            superhelte = new ArrayList<>(); // Opret en ny liste, hvis indlæsning mislykkes
+        }
+    }
+
+    public void saveSuperheroes() {
+        if (!isDirty) {
+            return; // Ingen grund til at gemme, hvis der ikke er lavet ændringer
+        }
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILENAME))) {
+            outputStream.writeObject(superhelte);
+            isDirty = false; // Nulstil dirty flag efter gemning
+            System.out.println("Superhelte er gemt til filen 'superheroes.txt'.");
+        } catch (IOException e) {
+            System.out.println("Fejl ved gemning af superhelte til filen.");
+        }
     }
 }
 
