@@ -3,13 +3,12 @@ import java.util.*;
 
 public class UserInterface {
     private Scanner scanner;
-    private Database database;
     private Controller controller;
 
-    public UserInterface() {
+    public UserInterface(Controller controller) {
             this.scanner = new Scanner(System.in);
-            this.database = new Database();
-            this.controller = new Controller(database);
+            this.controller = controller;
+            controller.initDatabase();
         }
 
     public void start() {
@@ -84,7 +83,7 @@ public class UserInterface {
 
                 Superhelt superhelt = new Superhelt(navn, erMenneske, superkraft, oprettelsesår, styrke);
 
-                database.addSuperhelt(superhelt);
+                controller.addSuperHeroToDatabase(superhelt);
 
                 System.out.println("Vil du lave en ny superhelt? (ja/nej): ");
                 String igen = scanner.nextLine();
@@ -135,22 +134,20 @@ public class UserInterface {
         }
     }
 
-        public void søgSuperhelt () {
-            System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
+    public void søgSuperhelt() {
+        System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
+        String søgeord = scanner.nextLine();
+        List<Superhelt> matchendeSuperhelte = controller.søgSuperhelte(søgeord);
 
-            String søgeord = scanner.nextLine();
-            ArrayList<Superhelt> matchendeSuperhelte = database.søgSuperhelte(søgeord);
-
-
-            if (matchendeSuperhelte.isEmpty()) {
-                System.out.println("Ingen matchende superhelte blev fundet.");
-            } else {
-                System.out.println("Matchende superhelte:");
-                for (int i = 0; i < matchendeSuperhelte.size(); i++) {
-                    System.out.println((i + 1) + ". " + matchendeSuperhelte.get(i).getNavn());
-                }
+        if (matchendeSuperhelte.isEmpty()) {
+            System.out.println("Ingen matchende superhelte blev fundet.");
+        } else {
+            System.out.println("Matchende superhelte:");
+            for (Superhelt superhelt : matchendeSuperhelte) {
+                System.out.println(superhelt);
             }
         }
+    }
 
         public void redigerSuperhelt () {
             System.out.println("Indtast navnet på den superhelt, du vil redigere: ");

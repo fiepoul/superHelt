@@ -20,6 +20,10 @@ public class Controller {
         return database.harSuperhelt(navn);
     }
 
+    public void addSuperHeroToDatabase(Superhelt superhelt) {
+       database.addSuperhelt(superhelt);
+    }
+
     public void editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, int nyStyrke) {
         // Fortæller database klassen at den skal opdatere en superhelt.
         boolean opdateret = database.editSuperhero(nytNavn, nySuperkraft, nyErMenneske, nytOprettelsesår, nyStyrke);
@@ -32,13 +36,16 @@ public class Controller {
     }
 
     public void saveSuperheroesIfNeeded() {
-        if (database.getIsDirty()) {
             database.saveSuperheroes();
-        }
     }
 
     public void initDatabase() {
         database.loadSuperheroes();
+    }
+
+    public ArrayList<Superhelt> søgSuperhelte(String søgeord) {
+        // Logikken for at søge i databasen og returnere resultaterne
+        return database.søgSuperhelte(søgeord);
     }
 
 }

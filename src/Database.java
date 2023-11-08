@@ -83,5 +83,6 @@ public class Database {
             System.out.println("Fejl ved gemning af superhelte til filen.");
         }
     }
+
 }
 
