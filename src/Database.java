@@ -26,7 +26,8 @@ public class Database {
 
         return matchendeSuperhelte;
     }
-    public void editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, String nyStyrke) {
+
+    public boolean editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, int nyStyrke) {
         for (Superhelt superhelt : superhelte) {
             if (superhelt.getNavn().equalsIgnoreCase(nytNavn)) {
                 // Find superhelten med det matchende navn og rediger oplysningerne
@@ -37,11 +38,11 @@ public class Database {
                 superhelt.setStyrke(nyStyrke);
                 // Du kan tilføje flere redigeringsoperationer efter behov
 
-                System.out.println("Superhelten er blevet redigeret.");
-                return; // Afslut metoden, da redigeringen er gennemført
+                return true;
             }
         }
         System.out.println("Ingen superhelt med det angivne navn blev fundet.");
+        return false;
     }
 
     public boolean harSuperhelt(String navn) {
@@ -51,7 +52,8 @@ public class Database {
             }
         }
         return false; // Superhelten blev ikke fundet i databasen
-    }
+
 
     }
+}
 

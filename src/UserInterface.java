@@ -1,4 +1,6 @@
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
@@ -18,15 +20,7 @@ public class UserInterface {
 
         while (fortsæt) {
             try {
-                System.out.print("VELKOMMEN TIL SUPERHELTE UNIVERSET <3");
-                System.out.println("\nMENU: ");
-                System.out.println("1. Opret superhelte");
-                System.out.println("2. Vis alle superhelte");
-                System.out.println("3. Søg en superhelt");
-                System.out.println("4. Rediger en superhelt");
-                System.out.println("5. Forlad programmet");
-
-                System.out.println("Vælg en af valgmulighederne: ");
+                printMenu();
                 int menuValg = scanner.nextInt();
                 scanner.nextLine();
 
@@ -36,30 +30,45 @@ public class UserInterface {
                         break;
                     case 2:
                         visAlleSuperhelte();
-                        fortsæt = false;
                         break;
                     case 3:
-                        søgSuperhelt();
-                        fortsæt = false;
+                        visSorteretListe();
                         break;
                     case 4:
-                        redigerSuperhelt();
-                        fortsæt = false;
+                        søgSuperhelt();
                         break;
                     case 5:
-                        System.out.println("Forlader superheltene");
+                        redigerSuperhelt();
+                        break;
+                    case 6:
+                        System.out.println("Gemmer superhelte og afslutter programmet.");
+                        saveSuperheroes();
                         fortsæt = false;
                         scanner.close();
                         break;
 
                     default:
-                        System.out.println("Du havde fem valgmuligheder. Ikke et helt univers. Vælg igen.");
+                        System.out.println("Du havde seks valgmuligheder. Ikke et helt univers. Vælg igen.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Ugyldig input. Indtast et heltal.");
-                scanner.nextLine(); // Ryd op i input buffer
+                System.out.println("Ugyldig input. Indtast et heltal: ");
+                scanner.next(); // Ryd op i unvalid input
             }
         }
+        scanner.close();
+    }
+
+    private void printMenu() {
+            System.out.println("\nVELKOMMEN TIL SUPERHELTE UNIVERSET <3");
+            System.out.println("\nMENU: ");
+            System.out.println("1. Opret superhelte");
+            System.out.println("2. Vis alle superhelte");
+            System.out.println("3. Vis alle superhelt sorteret");
+            System.out.println("4. Søg en superhelt");
+            System.out.println("5. Rediger en superhelt");
+            System.out.println("6. Slet superhelt");
+            System.out.println("7. Forlad programmet");
+            System.out.println("Vælg en af valgmulighederne: ");
     }
         public void opretSuperhelte () {
             while (true) {
@@ -71,23 +80,10 @@ public class UserInterface {
 
                 System.out.print("Hvilken superkraft har superhelten: ");
                 String superkraft = scanner.nextLine();
-                // Løkke for at teste om input er firecifret
-                int oprettelsesår = 0;
 
-                while (true) {
-                    System.out.print("Indtast oprettelsesår (fire cifre): ");
-                    String input = scanner.nextLine();
+                int oprettelsesår = readIntegerWithPrompt("Indtast oprettelsesår (fire cifre): ", 1200, 2023);
 
-                    if (input.length() == 4 && input.matches("\\d+")) {
-                        oprettelsesår = Integer.parseInt(input);
-                        break;
-                    } else {
-                        System.out.print("Ugyldigt input. ");
-                    }
-                }
-
-                System.out.print("Hvilken styrke har din superhelt: ");
-                String styrke = scanner.nextLine();
+                int styrke = readIntegerWithPrompt("Indtast styrke (1-10): ", 1, 10);
 
                 Superhelt superhelt = new Superhelt(navn, erMenneske, superkraft, oprettelsesår, styrke);
 
@@ -114,6 +110,25 @@ public class UserInterface {
             }
         }
 
+    public void visSorteretListe() {
+        ArrayList<Superhelt> alleSuperhelte = controller.hentAlleSuperhelte();
+
+        if (alleSuperhelte != null && !alleSuperhelte.isEmpty()) {
+            // Kopier listen for at undgå at ændre den oprindelige rækkefølge
+            ArrayList<Superhelt> sorteretListe = new ArrayList<>(alleSuperhelte);
+
+            // Sorter listen alfabetisk baseret på superheltenes navne
+            Collections.sort(sorteretListe);
+
+            System.out.println("Alfabetisk sorteret liste af superheltenavne:\n");
+            for (Superhelt superhelt : sorteretListe) {
+                System.out.println(superhelt.toString());
+            }
+        } else {
+            System.out.println("Ingen superhelte fundet i databasen.");
+        }
+    }
+
         public void søgSuperhelt () {
             System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
 
@@ -133,12 +148,15 @@ public class UserInterface {
 
         public void redigerSuperhelt () {
             System.out.println("Indtast navnet på den superhelt, du vil redigere: ");
-            String nytNavn = scanner.nextLine();
+            String navnTilRedigering = scanner.nextLine();
 
-            if (!controller.eksistererSuperhelt(nytNavn)) {
+            if (!controller.eksistererSuperhelt(navnTilRedigering)) {
                 System.out.println("Superhelten findes ikke i databasen.");
                 return; // Afslut metoden uden at forsøge at redigere
             }
+
+            System.out.println("Indtast nyt navn: ");
+            String nytNavn = scanner.nextLine();
 
             System.out.print("Indtast ny superkraft: ");
             String nySuperkraft = scanner.nextLine();
@@ -146,15 +164,42 @@ public class UserInterface {
             System.out.print("Er superhelten et menneske eller ej? ja/nej: ");
             Boolean nyErMenneske = scanner.nextLine().equalsIgnoreCase("ja");
 
-            System.out.print("Indtast nyt oprettelsesår: ");
-            int nytOprettelsesår = scanner.nextInt();
-            scanner.nextLine();
+            int nytOprettelsesår = readIntegerWithPrompt("Indtast nyt oprettelsesår (fire cifre): ", 1200, 2023);
 
-            System.out.print("Indtast ny styrke: ");
-            String nyStyrke = scanner.nextLine();
+            int nyStyrke = readIntegerWithPrompt("Indtast ny styrke (1-10): ", 1, 10);
 
-            database.editSuperhero(nytNavn, nySuperkraft, nyErMenneske, nytOprettelsesår, nyStyrke);
+            controller.editSuperhero(nytNavn, nySuperkraft, nyErMenneske, nytOprettelsesår, nyStyrke);
         }
+
+    private int readIntegerWithPrompt(String prompt, int min, int max) {
+        int number;
+        while (true) {
+            System.out.print(prompt);
+            try {
+                number = scanner.nextInt();
+                if (number >= min && number <= max) {
+                    break;
+                } else {
+                    System.out.println("Input er uden for grænsen.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Prøv igen: ");
+            }
+            scanner.nextLine(); // Clear buffer
+        }
+        scanner.nextLine(); // Consume the remaining newline
+        return number;
+    }
+
+    public void saveSuperheroes() {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("superheroes.txt"))) {
+            outputStream.writeObject(controller.hentAlleSuperhelte());
+            System.out.println("Superhelte er gemt til filen 'superheroes.txt'.");
+        } catch (IOException e) {
+            System.out.println("Fejl ved gemning af superhelte til filen.");
+        }
+    }
+
     }
 
 

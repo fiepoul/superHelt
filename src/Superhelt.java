@@ -1,11 +1,11 @@
-public class Superhelt {
+public class Superhelt implements Comparable<Superhelt> {
         private String navn;
         private boolean erMenneske;
         private String superkraft;
         private int oprettelsesår;
-        private String styrke;
+        private int styrke;
 
-        public Superhelt(String navn, boolean erMenneske, String superkraft, int oprettelsesår, String styrke) {
+        public Superhelt(String navn, boolean erMenneske, String superkraft, int oprettelsesår, int styrke) {
             this.navn = navn;
             this.erMenneske = erMenneske;
             this.superkraft = superkraft;
@@ -36,7 +36,7 @@ public class Superhelt {
             return oprettelsesår;
         }
 
-        public String getStyrke() {
+        public int getStyrke() {
             return styrke;
         }
 
@@ -55,8 +55,14 @@ public class Superhelt {
             this.oprettelsesår = nytOprettelsesår;
     }
 
-    public void setStyrke(String nyStyrke) {
+    public void setStyrke(int nyStyrke) {
             this.styrke = nyStyrke;
+    }
+
+    @Override
+    public int compareTo(Superhelt otherSuperhelt) {
+        // Sammenlign superhelte baseret på navnet (alfabetisk)
+        return this.navn.compareTo(otherSuperhelt.navn);
     }
 
     }

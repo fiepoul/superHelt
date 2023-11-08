@@ -20,4 +20,15 @@ public class Controller {
         return database.harSuperhelt(navn);
     }
 
+    public void editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, int nyStyrke) {
+        // Fortæller database klassen at den skal opdatere en superhelt.
+        boolean opdateret = database.editSuperhero(nytNavn, nySuperkraft, nyErMenneske, nytOprettelsesår, nyStyrke);
+
+        if (opdateret) {
+            System.out.println("Superhelten er blevet redigeret.");
+        } else {
+            System.out.println("Ingen superhelt med det angivne navn blev fundet.");
+        }
+    }
+
 }
