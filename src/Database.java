@@ -30,18 +30,15 @@ public class Database {
     public boolean editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, int nyStyrke) {
         for (Superhelt superhelt : superhelte) {
             if (superhelt.getNavn().equalsIgnoreCase(nytNavn)) {
-                // Find superhelten med det matchende navn og rediger oplysningerne
+                // Finder superhelten med det matchende navn og redigerer oplysningerne
                 superhelt.setNavn(nytNavn);
                 superhelt.setSuperkraft(nySuperkraft);
                 superhelt.setErMenneske(nyErMenneske);
                 superhelt.setOprettelsesår(nytOprettelsesår);
                 superhelt.setStyrke(nyStyrke);
-                // Du kan tilføje flere redigeringsoperationer efter behov
-
                 return true;
             }
         }
-        System.out.println("Ingen superhelt med det angivne navn blev fundet.");
         return false;
     }
 

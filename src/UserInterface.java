@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class UserInterface {
-    private Scanner scanner;
-    private Controller controller;
+    private final Scanner scanner;
+    private final Controller controller;
 
     public UserInterface(Controller controller) {
             this.scanner = new Scanner(System.in);
@@ -11,39 +11,25 @@ public class UserInterface {
         }
 
     public void start() {
-        boolean fortsæt = true;
+        boolean continues = true;
 
-        while (fortsæt) {
+        while (continues) {
             try {
                 printMenu();
-                int menuValg = Integer.parseInt(scanner.nextLine());
+                int menuOption = Integer.parseInt(scanner.nextLine());
 
-                switch (menuValg) {
-                    case 1:
-                        opretSuperhelte();
-                        break;
-                    case 2:
-                        visAlleSuperhelte();
-                        break;
-                    case 3:
-                        visSorteretListe();
-                        break;
-                    case 4:
-                        søgSuperhelt();
-                        break;
-                    case 5:
-                        redigerSuperhelt();
-                        break;
-                    case 6:
-                        deleteSuperhero();
-                        break;
-                    case 7:
+                switch (menuOption) {
+                    case 1 -> createSuperhero();
+                    case 2 -> displayAllSuperheroes();
+                    case 3 -> displaySortedlist();
+                    case 4 -> searchSuperhero();
+                    case 5 -> editSuperhero();
+                    case 6 -> deleteSuperhero();
+                    case 7 -> {
                         saveAndExit();
-                        fortsæt = false;
-                        break;
-
-                    default:
-                        System.out.println("Du har syv valgmuligheder. Ikke et helt univers. Vælg igen.");
+                        continues = false;
+                    }
+                    default -> System.out.println("Du har syv valgmuligheder. Ikke et helt univers. Vælg igen: ");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Ugyldig input. Indtast et heltal: ");
@@ -64,7 +50,7 @@ public class UserInterface {
             System.out.println("7. Forlad programmet");
             System.out.println("Vælg en af valgmulighederne: ");
     }
-        public void opretSuperhelte () {
+        public void createSuperhero() {
             while (true) {
                 System.out.print("\nIndtast superheltnavn: ");
                 String navn = scanner.nextLine();
@@ -92,7 +78,7 @@ public class UserInterface {
             }
         }
 
-        public void visAlleSuperhelte () {
+        public void displayAllSuperheroes() {
             ArrayList<Superhelt> alleSuperhelte = controller.hentAlleSuperhelte();
 
             if (alleSuperhelte != null) {
@@ -104,25 +90,19 @@ public class UserInterface {
             }
         }
 
-    public void visSorteretListe() {
+    public void displaySortedlist() {
         System.out.println("Hvilken attribut vil du sortere efter? (navn/oprettelsesår/styrke)");
         String attribut = scanner.nextLine();
 
-        Comparator<Superhelt> comparator;
-        switch (attribut.toLowerCase()) {
-            case "navn":
-                comparator = new SuperHeltComparator();
-                break;
-            case "oprettelsesår":
-                comparator = Comparator.comparing(Superhelt::getOprettelsesår);
-                break;
-            case "styrke":
-                comparator = Comparator.comparing(Superhelt::getStyrke);
-                break;
-            default:
+        Comparator<Superhelt> comparator = switch (attribut.toLowerCase()) {
+            case "navn" -> new SuperHeltComparator();
+            case "oprettelsesår" -> Comparator.comparing(Superhelt::getOprettelsesår);
+            case "styrke" -> Comparator.comparing(Superhelt::getStyrke);
+            default -> {
                 System.out.println("Ukendt attribut. Sorterer efter navn som standard.");
-                comparator = new SuperHeltComparator();
-        }
+                yield new SuperHeltComparator();
+            }
+        };
 
         ArrayList<Superhelt> sorteretListe = new ArrayList<>(controller.hentAlleSuperhelte());
         sorteretListe.sort(comparator);
@@ -132,7 +112,7 @@ public class UserInterface {
         }
     }
 
-    public void søgSuperhelt() {
+    public void searchSuperhero() {
         System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
         String søgeord = scanner.nextLine();
         List<Superhelt> matchendeSuperhelte = controller.søgSuperhelte(søgeord);
@@ -147,7 +127,7 @@ public class UserInterface {
         }
     }
 
-        public void redigerSuperhelt () {
+        public void editSuperhero() {
             System.out.println("Indtast navnet på den superhelt, du vil redigere: ");
             String navnTilRedigering = scanner.nextLine();
 
@@ -194,7 +174,7 @@ public class UserInterface {
 
     public void deleteSuperhero() {
         System.out.println("Indtast navnet på den superhelt du vil slette: ");
-        String superheroToDelete = scanner.nextLine();
+        String superheroToDelete = scanner.nextLine().trim();
 
         if (!controller.superheroExists(superheroToDelete)) {
             System.out.println("Superhelten findes ikke i databasen.");
