@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 
 public class UserInterface {
@@ -13,13 +12,11 @@ public class UserInterface {
 
     public void start() {
         boolean fortsæt = true;
-        controller.initDatabase();
 
         while (fortsæt) {
             try {
                 printMenu();
-                int menuValg = scanner.nextInt();
-                scanner.nextLine();
+                int menuValg = Integer.parseInt(scanner.nextLine());
 
                 switch (menuValg) {
                     case 1:
@@ -38,20 +35,21 @@ public class UserInterface {
                         redigerSuperhelt();
                         break;
                     case 6:
+                        deleteSuperhero();
+                        break;
+                    case 7:
                         saveAndExit();
                         fortsæt = false;
-                        scanner.close();
                         break;
 
                     default:
-                        System.out.println("Du havde syv valgmuligheder. Ikke et helt univers. Vælg igen.");
+                        System.out.println("Du har syv valgmuligheder. Ikke et helt univers. Vælg igen.");
                 }
-            } catch (InputMismatchException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Ugyldig input. Indtast et heltal: ");
                 scanner.next(); // Ryd op i unvalid input
             }
         }
-        scanner.close();
     }
 
     private void printMenu() {
@@ -153,7 +151,7 @@ public class UserInterface {
             System.out.println("Indtast navnet på den superhelt, du vil redigere: ");
             String navnTilRedigering = scanner.nextLine();
 
-            if (!controller.eksistererSuperhelt(navnTilRedigering)) {
+            if (!controller.superheroExists(navnTilRedigering)) {
                 System.out.println("Superhelten findes ikke i databasen.");
                 return; // Afslut metoden uden at forsøge at redigere
             }
@@ -194,10 +192,21 @@ public class UserInterface {
         return number;
     }
 
+    public void deleteSuperhero() {
+        System.out.println("Indtast navnet på den superhelt du vil slette: ");
+        String superheroToDelete = scanner.nextLine();
+
+        if (!controller.superheroExists(superheroToDelete)) {
+            System.out.println("Superhelten findes ikke i databasen.");
+        } else {
+            controller.deleteSuperhero(superheroToDelete);
+            System.out.println("Du har slettet " + superheroToDelete + " fra listen.");
+        }
+    }
+
     public void saveAndExit() {
         controller.saveSuperheroesIfNeeded();
         System.out.println("Programmet afsluttes og superhelte gemmes.");
-        System.exit(0);
     }
 
     }

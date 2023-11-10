@@ -15,7 +15,7 @@ public class Controller {
         return input.equalsIgnoreCase("ja") || input.equalsIgnoreCase("nej");
     }
 
-    public boolean eksistererSuperhelt(String navn) {
+    public boolean superheroExists(String navn) {
         // Brug af Database-klassen til at kontrollere, om superhelten findes
         return database.harSuperhelt(navn);
     }
@@ -48,7 +48,7 @@ public class Controller {
         return database.søgSuperhelte(søgeord);
     }
 
-    public boolean sletSuperhelt(String navn) {
+    public boolean deleteSuperhero(String navn) {
         // Kalder slet-metoden i Database-klassen og returnerer resultatet.
         return database.sletSuperhelt(navn);
     }
