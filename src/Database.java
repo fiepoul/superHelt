@@ -84,5 +84,9 @@ public class Database {
         }
     }
 
+    public boolean sletSuperhelt(String navn) {
+        return superhelte.removeIf(superhelt -> superhelt.getNavn().equalsIgnoreCase(navn));
+    }
+
 }
 

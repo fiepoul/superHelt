@@ -48,4 +48,9 @@ public class Controller {
         return database.søgSuperhelte(søgeord);
     }
 
+    public boolean sletSuperhelt(String navn) {
+        // Kalder slet-metoden i Database-klassen og returnerer resultatet.
+        return database.sletSuperhelt(navn);
+    }
+
 }

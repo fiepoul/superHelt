@@ -44,7 +44,7 @@ public class UserInterface {
                         break;
 
                     default:
-                        System.out.println("Du havde seks valgmuligheder. Ikke et helt univers. Vælg igen.");
+                        System.out.println("Du havde syv valgmuligheder. Ikke et helt univers. Vælg igen.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Ugyldig input. Indtast et heltal: ");
