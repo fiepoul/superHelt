@@ -20,8 +20,8 @@ public class UserInterface {
 
                 switch (menuOption) {
                     case 1 -> createSuperhero();
-                    case 2 -> displayAllSuperheroes();
-                    case 3 -> displaySortedlist();
+                    case 2 -> displaySuperheroesSorted(false);
+                    case 3 -> displaySuperheroesSorted(true);
                     case 4 -> searchSuperhero();
                     case 5 -> editSuperhero();
                     case 6 -> deleteSuperhero();
@@ -29,11 +29,10 @@ public class UserInterface {
                         saveAndExit();
                         continues = false;
                     }
-                    default -> System.out.println("Du har syv valgmuligheder. Ikke et helt univers. Vælg igen: ");
+                    default -> System.out.println("Ugyldigt valg. Vælg igen (1-7): ");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Ugyldig input. Indtast et heltal: ");
-                scanner.next(); // Ryd op i unvalid input
             }
         }
     }
@@ -43,7 +42,7 @@ public class UserInterface {
             System.out.println("\nMENU: ");
             System.out.println("1. Opret superhelte");
             System.out.println("2. Vis alle superhelte");
-            System.out.println("3. Vis alle superhelt sorteret");
+            System.out.println("3. Sorter superheltelisten");
             System.out.println("4. Søg en superhelt");
             System.out.println("5. Rediger en superhelt");
             System.out.println("6. Slet superhelt");
@@ -78,38 +77,21 @@ public class UserInterface {
             }
         }
 
-        public void displayAllSuperheroes() {
-            ArrayList<Superhelt> alleSuperhelte = controller.hentAlleSuperhelte();
-
-            if (alleSuperhelte != null) {
-                for (Superhelt superhelt : alleSuperhelte) {
-                    System.out.println(superhelt);
-                }
-            } else {
-                System.out.println("Ingen superhelte fundet i databasen.");
-            }
+    public void displaySuperheroesSorted(boolean isSorted) {
+        if (isSorted) {
+            String primaryAttribute = getAttributeInput("Vælg primær attribut til sortering: ");
+            String secondaryAttribute = getAttributeInput("Vælg sekundær attribut til sortering: ");
+            List<Superhelt> sortedSuperheroes = controller.getSuperheroesSorted(primaryAttribute, secondaryAttribute);
+            sortedSuperheroes.forEach(System.out::println);
+        } else {
+            List<Superhelt> allSuperheroes = controller.hentAlleSuperhelte();
+            allSuperheroes.forEach(System.out::println);
         }
+    }
 
-    public void displaySortedlist() {
-        System.out.println("Hvilken attribut vil du sortere efter? (navn/oprettelsesår/styrke)");
-        String attribut = scanner.nextLine();
-
-        Comparator<Superhelt> comparator = switch (attribut.toLowerCase()) {
-            case "navn" -> new SuperHeltComparator();
-            case "oprettelsesår" -> Comparator.comparing(Superhelt::getOprettelsesår);
-            case "styrke" -> Comparator.comparing(Superhelt::getStyrke);
-            default -> {
-                System.out.println("Ukendt attribut. Sorterer efter navn som standard.");
-                yield new SuperHeltComparator();
-            }
-        };
-
-        ArrayList<Superhelt> sorteretListe = new ArrayList<>(controller.hentAlleSuperhelte());
-        sorteretListe.sort(comparator);
-
-        for (Superhelt superhelt : sorteretListe) {
-            System.out.println(superhelt.toString());
-        }
+    private String getAttributeInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
     }
 
     public void searchSuperhero() {
@@ -185,10 +167,15 @@ public class UserInterface {
     }
 
     public void saveAndExit() {
-        controller.saveSuperheroesIfNeeded();
-        System.out.println("Programmet afsluttes og superhelte gemmes.");
+        try {
+            controller.saveSuperheroesIfNeeded();
+            System.out.println("Superhelte er gemt.");
+        } catch (Exception e) {
+            System.out.println("Fejl ved gemning af superhelte: " + e.getMessage());
+        }
+        System.out.println("Programmet afsluttes.");
     }
 
-    }
+}
 
 

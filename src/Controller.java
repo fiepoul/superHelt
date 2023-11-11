@@ -1,4 +1,7 @@
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class Controller {
    private Database database;
@@ -36,12 +39,22 @@ public class Controller {
     }
 
     public void saveSuperheroesIfNeeded() {
+        try {
             database.saveSuperheroes();
+        } catch (IOException e) {
+            System.out.println("Fejl ved gemning af superhelte: " + e.getMessage());
+            // Yderligere fejlhåndtering kan tilføjes her
+        }
     }
 
     public void initDatabase() {
-        database.loadSuperheroes();
+        try {
+            database.loadSuperheroes();
+        } catch (Exception e) {
+            System.out.println("Fejl ved indlæsning af superhelte: " + e.getMessage());
+        }
     }
+
 
     public ArrayList<Superhelt> søgSuperhelte(String søgeord) {
         // Logikken for at søge i databasen og returnere resultaterne
@@ -51,6 +64,17 @@ public class Controller {
     public boolean deleteSuperhero(String navn) {
         // Kalder slet-metoden i Database-klassen og returnerer resultatet.
         return database.sletSuperhelt(navn);
+    }
+
+    public List<Superhelt> getSuperheroesSorted(String primaryAttribute, String secondaryAttribute) {
+        Comparator<Superhelt> primaryComparator = SuperHeltComparator.getComparatorBasedOnAttribute(primaryAttribute);
+        Comparator<Superhelt> secondaryComparator = SuperHeltComparator.getComparatorBasedOnAttribute(secondaryAttribute);
+
+        SuperHeltComparator combinedComparator = new SuperHeltComparator(primaryComparator, secondaryComparator);
+
+        ArrayList<Superhelt> sortedList = new ArrayList<>(database.getAllSuperhelte());
+        sortedList.sort(combinedComparator);
+        return sortedList;
     }
 
 }

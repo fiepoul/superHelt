@@ -8,7 +8,12 @@ public class Database {
 
     public Database() {
         superhelte = new ArrayList<>();
-        loadSuperheroes();
+        try {
+            loadSuperheroes();
+        } catch (Exception e) {
+            System.out.println("Fejl under indlæsning af superhelte: " + e.getMessage());
+            superhelte = new ArrayList<>(); // Opret en ny liste, hvis indlæsning mislykkes
+        }
     }
 
     public ArrayList<Superhelt> getAllSuperhelte() {
@@ -58,16 +63,13 @@ public class Database {
     }
 
     // En metode til at indlæse data
-    public void loadSuperheroes() {
+    public void loadSuperheroes() throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILENAME))) {
             superhelte = (ArrayList<Superhelt>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Kunne ikke indlæse superhelte fra filen: " + e.getMessage());
-            superhelte = new ArrayList<>(); // Opret en ny liste, hvis indlæsning mislykkes
         }
     }
 
-    public void saveSuperheroes() {
+    public void saveSuperheroes() throws IOException {
         if (!isDirty) {
             return; // Ingen grund til at gemme, hvis der ikke er lavet ændringer
         }
@@ -75,9 +77,6 @@ public class Database {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILENAME))) {
             outputStream.writeObject(superhelte);
             isDirty = false; // Nulstil dirty flag efter gemning
-            System.out.println("Superhelte er gemt til filen 'superheroes.txt'.");
-        } catch (IOException e) {
-            System.out.println("Fejl ved gemning af superhelte til filen.");
         }
     }
 
