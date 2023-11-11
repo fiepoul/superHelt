@@ -4,13 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Controller {
-   private Database database;
+   private final Database database;
 
    public Controller(Database database) {
        this.database = database;
    }
 
-    public ArrayList<Superhelt> hentAlleSuperhelte() {
+    public ArrayList<Superhelt> getAllSuperheroes() {
         return database.getAllSuperhelte();
     }
 
@@ -20,7 +20,7 @@ public class Controller {
 
     public boolean superheroExists(String navn) {
         // Brug af Database-klassen til at kontrollere, om superhelten findes
-        return database.harSuperhelt(navn);
+        return database.haveSuperhero(navn);
     }
 
     public void addSuperHeroToDatabase(Superhelt superhelt) {
@@ -43,7 +43,6 @@ public class Controller {
             database.saveSuperheroes();
         } catch (IOException e) {
             System.out.println("Fejl ved gemning af superhelte: " + e.getMessage());
-            // Yderligere fejlhåndtering kan tilføjes her
         }
     }
 
@@ -56,14 +55,14 @@ public class Controller {
     }
 
 
-    public ArrayList<Superhelt> søgSuperhelte(String søgeord) {
+    public ArrayList<Superhelt> searchSuperhero(String searchword) {
         // Logikken for at søge i databasen og returnere resultaterne
-        return database.søgSuperhelte(søgeord);
+        return database.searchSuperhero(searchword);
     }
 
     public boolean deleteSuperhero(String navn) {
         // Kalder slet-metoden i Database-klassen og returnerer resultatet.
-        return database.sletSuperhelt(navn);
+        return database.deleteSuperhero(navn);
     }
 
     public List<Superhelt> getSuperheroesSorted(String primaryAttribute, String secondaryAttribute) {

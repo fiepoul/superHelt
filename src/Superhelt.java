@@ -25,14 +25,6 @@ public class Superhelt implements Serializable, Comparable<Superhelt> {
             return navn;
         }
 
-        public boolean getErMenneske() {
-            return erMenneske;
-        }
-
-        public String getSuperkraft() {
-            return superkraft;
-        }
-
         public int getOprettelsesår(){
             return oprettelsesår;
         }

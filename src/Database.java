@@ -12,7 +12,7 @@ public class Database {
             loadSuperheroes();
         } catch (Exception e) {
             System.out.println("Fejl under indlæsning af superhelte: " + e.getMessage());
-            superhelte = new ArrayList<>(); // Opret en ny liste, hvis indlæsning mislykkes
+            superhelte = new ArrayList<>(); // Opretter en ny liste, hvis indlæsning mislykkes
         }
     }
 
@@ -20,7 +20,7 @@ public class Database {
         return superhelte;
     }
 
-    public ArrayList<Superhelt> søgSuperhelte(String søgeord) {
+    public ArrayList<Superhelt> searchSuperhero(String søgeord) {
         ArrayList<Superhelt> matchendeSuperhelte = new ArrayList<>();
 
         for (Superhelt superhelt : superhelte) {
@@ -35,7 +35,6 @@ public class Database {
     public boolean editSuperhero(String nytNavn, String nySuperkraft, Boolean nyErMenneske, int nytOprettelsesår, int nyStyrke) {
         for (Superhelt superhelt : superhelte) {
             if (superhelt.getNavn().equalsIgnoreCase(nytNavn)) {
-                // Finder superhelten med det matchende navn og redigerer oplysningerne
                 superhelt.setNavn(nytNavn);
                 superhelt.setSuperkraft(nySuperkraft);
                 superhelt.setErMenneske(nyErMenneske);
@@ -47,7 +46,7 @@ public class Database {
         return false;
     }
 
-    public boolean harSuperhelt(String navn) {
+    public boolean haveSuperhero(String navn) {
         for (Superhelt superhelt : superhelte) {
             if (superhelt.getNavn().equalsIgnoreCase(navn)) {
                 return true;
@@ -71,7 +70,7 @@ public class Database {
 
     public void saveSuperheroes() throws IOException {
         if (!isDirty) {
-            return; // Ingen grund til at gemme, hvis der ikke er lavet ændringer
+            return; // Gemmer ikke, hvis der ikke er lavet ændringer
         }
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FILENAME))) {
@@ -80,7 +79,7 @@ public class Database {
         }
     }
 
-    public boolean sletSuperhelt(String navn) {
+    public boolean deleteSuperhero(String navn) {
         return superhelte.removeIf(superhelt -> superhelt.getNavn().equalsIgnoreCase(navn));
     }
 

@@ -84,7 +84,7 @@ public class UserInterface {
             List<Superhelt> sortedSuperheroes = controller.getSuperheroesSorted(primaryAttribute, secondaryAttribute);
             sortedSuperheroes.forEach(System.out::println);
         } else {
-            List<Superhelt> allSuperheroes = controller.hentAlleSuperhelte();
+            List<Superhelt> allSuperheroes = controller.getAllSuperheroes();
             allSuperheroes.forEach(System.out::println);
         }
     }
@@ -97,7 +97,7 @@ public class UserInterface {
     public void searchSuperhero() {
         System.out.println("Søg ved hjælp af et eller flere bogstaver på din superhelt: ");
         String søgeord = scanner.nextLine();
-        List<Superhelt> matchendeSuperhelte = controller.søgSuperhelte(søgeord);
+        List<Superhelt> matchendeSuperhelte = controller.searchSuperhero(søgeord);
 
         if (matchendeSuperhelte.isEmpty()) {
             System.out.println("Ingen matchende superhelte blev fundet.");
